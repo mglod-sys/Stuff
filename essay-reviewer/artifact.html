@@ -1,13 +1,13 @@
 <title>Red Pen Essay Review</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=Schibsted+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Schibsted+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
   /* Layout: two-column desk — manuscript on the left, marked-up review on the right; stacks on phones. */
   :root {
     --paper: #f3f4f1; --sheet: #ffffff; --ink: #1c2230; --ink-soft: #5d6575;
     --rule: #d9dcd6; --accent: #24427a; --accent-ink: #ffffff; --redpen: #c2362b;
-    --redpen-wash: #fbe9e6; --good: #2d6a46; --warn: #a86a12;
+    --redpen-wash: #fbe9e6; --good: #2d6a46; --good-wash: #e5f2ea; --warn: #a86a12;
     --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
     --serif: "Literata", Georgia, "Times New Roman", serif;
     --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
@@ -16,13 +16,13 @@
     :root:not([data-theme="light"]) {
       --paper: #13161c; --sheet: #1b1f27; --ink: #e6e8ec; --ink-soft: #9aa1ae;
       --rule: #2e3440; --accent: #8fb0ea; --accent-ink: #0f1a2e; --redpen: #f07b6f;
-      --redpen-wash: #3a1f1d; --good: #7cc79a; --warn: #e2ad5a; color-scheme: dark;
+      --redpen-wash: #3a1f1d; --good: #7cc79a; --good-wash: #1c3326; --warn: #e2ad5a; color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
     --paper: #13161c; --sheet: #1b1f27; --ink: #e6e8ec; --ink-soft: #9aa1ae;
     --rule: #2e3440; --accent: #8fb0ea; --accent-ink: #0f1a2e; --redpen: #f07b6f;
-    --redpen-wash: #3a1f1d; --good: #7cc79a; --warn: #e2ad5a; color-scheme: dark;
+    --redpen-wash: #3a1f1d; --good: #7cc79a; --good-wash: #1c3326; --warn: #e2ad5a; color-scheme: dark;
   }
   * { box-sizing: border-box; }
   body { background: var(--paper); color: var(--ink); font: 15px/1.55 var(--display); }
@@ -30,9 +30,9 @@
   header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 20px; }
   h1 { margin: 0; font-size: 1.75rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
   h1 span { color: var(--redpen); }
-  header p { margin: 0; color: var(--ink-soft); max-width: 60ch; }
-  .desk { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 20px; align-items: start; }
-  @media (max-width: 860px) { .desk { grid-template-columns: minmax(0, 1fr); } }
+  header p { margin: 0; color: var(--ink-soft); max-width: 62ch; }
+  .desk { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 20px; align-items: start; }
+  @media (max-width: 900px) { .desk { grid-template-columns: minmax(0, 1fr); } }
   .sheet { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 20px; display: grid; gap: 14px; min-width: 0; }
   .eyebrow { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); font-weight: 500; }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -44,9 +44,9 @@
     width: 100%; font: inherit; color: var(--ink); background: var(--paper);
     border: 1px solid var(--rule); border-radius: 4px; padding: 9px 10px;
   }
-  textarea#essay { font: 16px/1.7 var(--serif); min-height: 360px; resize: vertical; padding: 14px 16px; }
+  textarea#essay { font: 16px/1.7 var(--serif); min-height: 380px; resize: vertical; padding: 14px 16px; }
   textarea#prompt { min-height: 64px; resize: vertical; }
-  input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .meter { display: flex; justify-content: space-between; gap: 10px; font-family: var(--mono); font-size: 0.8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
   .meter .over { color: var(--redpen); }
   .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
@@ -56,32 +56,65 @@
   .ghost { background: transparent; color: var(--ink); border-color: var(--rule); font-weight: 500; }
   .status { font-size: 0.88rem; color: var(--ink-soft); }
   .status.err { color: var(--redpen); }
+  details.guide { border-top: 1px solid var(--rule); padding-top: 10px; font-size: 0.88rem; color: var(--ink-soft); }
+  details.guide summary { cursor: pointer; color: var(--ink); font-weight: 500; }
+  details.guide dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; margin: 10px 0 0; }
+  details.guide dt { font-weight: 500; color: var(--ink); }
+  details.guide dd { margin: 0; }
 
   /* Report */
   .banner { font-size: 0.82rem; background: var(--paper); border: 1px dashed var(--rule); padding: 8px 10px; border-radius: 4px; color: var(--ink-soft); }
   .score { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
-  .grade { font: 700 3.4rem/1 var(--display); color: var(--redpen); font-variant-numeric: tabular-nums; border: 3px solid var(--redpen); border-radius: 50%; width: 112px; height: 112px; display: grid; place-items: center; transform: rotate(-6deg); flex: none; }
-  .grade small { display: block; font-size: 0.8rem; font-weight: 500; margin-top: -6px; text-align: center; }
-  .verdict { font: 1.1rem/1.45 var(--serif); margin: 0; flex: 1 1 220px; min-width: 0; }
-  .cats { display: grid; gap: 10px; }
-  .cat { display: grid; grid-template-columns: minmax(0, 11rem) 1fr 2.6rem; gap: 4px 12px; align-items: center; }
-  .cat .name { font-weight: 500; font-size: 0.9rem; }
-  .bar { height: 8px; background: var(--paper); border-radius: 4px; overflow: hidden; border: 1px solid var(--rule); }
-  .bar i { display: block; height: 100%; background: var(--accent); }
-  .cat .num { font-family: var(--mono); font-size: 0.85rem; text-align: right; font-variant-numeric: tabular-nums; }
-  .cat .why { grid-column: 1 / -1; color: var(--ink-soft); font-size: 0.86rem; margin: -2px 0 2px; }
-  @media (max-width: 480px) { .cat { grid-template-columns: 1fr 2.6rem; } .bar { grid-column: 1 / -1; grid-row: 2; } }
-  h2 { margin: 6px 0 0; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .grade { font: 700 3.2rem/1 var(--display); color: var(--redpen); font-variant-numeric: tabular-nums; border: 3px solid var(--redpen); border-radius: 50%; width: 112px; height: 112px; display: grid; place-items: center; transform: rotate(-6deg); flex: none; }
+  .grade small { display: block; font-size: 0.75rem; font-weight: 500; margin-top: -4px; text-align: center; }
+  .summary { flex: 1 1 240px; min-width: 0; display: grid; gap: 6px; }
+  .band { justify-self: start; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; background: var(--paper); border: 1px solid var(--rule); }
+  .delta { font-family: var(--mono); font-size: 0.8rem; color: var(--ink-soft); }
+  .delta.up { color: var(--good); } .delta.down { color: var(--redpen); }
+  .verdict { font: 1.08rem/1.45 var(--serif); margin: 0; }
+  .dims { display: grid; gap: 10px; }
+  .dim { display: grid; grid-template-columns: minmax(0, 8.5rem) auto 1fr; gap: 4px 12px; align-items: center; }
+  .dim .name { font-weight: 500; font-size: 0.9rem; }
+  .pips { display: flex; gap: 4px; }
+  .pips i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--accent); }
+  .pips i.on { background: var(--accent); }
+  .dim.weak .pips i { border-color: var(--redpen); } .dim.weak .pips i.on { background: var(--redpen); }
+  .dim .tag { font-size: 0.72rem; font-weight: 700; color: var(--redpen); text-transform: uppercase; letter-spacing: 0.06em; }
+  .dim .why { grid-column: 1 / -1; color: var(--ink-soft); font-size: 0.86rem; margin: -2px 0 2px; }
+  @media (max-width: 480px) { .dim { grid-template-columns: 1fr auto; } .dim .tag { grid-column: 1 / -1; } }
+  h2 { margin: 8px 0 0; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
   h2::before { content: ""; width: 10px; height: 10px; border-radius: 2px; background: var(--chip, var(--accent)); }
   h2.good { --chip: var(--good); } h2.fix { --chip: var(--redpen); } h2.fit { --chip: var(--warn); }
+  .lines { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 560px) { .lines { grid-template-columns: 1fr; } }
+  .line { border-radius: 4px; padding: 10px 12px; display: grid; gap: 6px; min-width: 0; }
+  .line.best { background: var(--good-wash); }
+  .line.worst { background: var(--redpen-wash); }
+  .line .k { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+  .line.best .k { color: var(--good); } .line.worst .k { color: var(--redpen); }
+  .line q, .note q { font: italic 0.98rem/1.5 var(--serif); quotes: "“" "”"; overflow-wrap: anywhere; }
+  .line span:last-child { font-size: 0.86rem; color: var(--ink-soft); }
+  .panel { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .panel { grid-template-columns: 1fr; } }
+  .reader { border: 1px solid var(--rule); border-radius: 4px; padding: 10px 12px; display: grid; gap: 4px; align-content: start; min-width: 0; }
+  .reader header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .reader b { font-size: 0.92rem; }
+  .reader .lens { font-size: 0.78rem; color: var(--ink-soft); }
+  .reader p { margin: 0; font-size: 0.9rem; }
+  .vote { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 3px; white-space: nowrap; }
+  .vote.yes { background: var(--good-wash); color: var(--good); }
+  .vote.maybe { background: var(--paper); color: var(--warn); border: 1px solid var(--rule); }
+  .vote.no { background: var(--redpen-wash); color: var(--redpen); }
+  .consensus { font: 0.98rem/1.5 var(--serif); margin: 0; padding-left: 12px; border-left: 3px solid var(--accent); }
+  .tally { font-family: var(--mono); font-size: 0.8rem; color: var(--ink-soft); }
   ul, ol { margin: 0; padding-left: 1.2rem; display: grid; gap: 6px; }
-  ol li strong { display: block; }
-  .notes { display: grid; gap: 10px; }
-  .note { border-left: 3px solid var(--redpen); padding: 4px 0 4px 12px; display: grid; gap: 3px; min-width: 0; }
-  .note q { font: italic 0.98rem/1.5 var(--serif); text-decoration: underline wavy var(--redpen); text-underline-offset: 4px; text-decoration-thickness: 1px; quotes: "“" "”"; overflow-wrap: anywhere; }
-  .note .issue { font-size: 0.88rem; color: var(--ink-soft); }
-  .note .fixit { font-size: 0.9rem; background: var(--redpen-wash); border-radius: 3px; padding: 4px 8px; justify-self: start; overflow-wrap: anywhere; }
-  .placeholder { color: var(--ink-soft); font: 1rem/1.6 var(--serif); }
+  .plan { border: 1px solid var(--redpen); border-radius: 4px; padding: 12px 14px; display: grid; gap: 8px; }
+  .plan p { margin: 0; }
+  .paras { display: grid; gap: 8px; }
+  .para { display: grid; grid-template-columns: 2.2rem 1fr; gap: 10px; font-size: 0.9rem; }
+  .para .n { font-family: var(--mono); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .para.hurt .n { color: var(--redpen); font-weight: 700; }
+  .placeholder { color: var(--ink-soft); font: 1rem/1.6 var(--serif); margin: 0; }
   .thinking::after { content: "…"; animation: blink 1.2s steps(4) infinite; }
   @keyframes blink { 50% { opacity: 0.3; } }
   @media (prefers-reduced-motion: reduce) { .thinking::after { animation: none; } }
@@ -90,33 +123,27 @@
 <div class="wrap">
   <header>
     <h1>Red Pen <span>Essay Review</span></h1>
-    <p>Paste a draft, add the prompt if you have one, and get a scored review with the fixes that matter most. Runs on your own Claude account.</p>
+    <p>Paste a draft of 100 to 1,500 words. You get a score, six dimension ratings, your best and weakest lines, a four-reader panel vote and a plan for the paragraph that needs the most work.</p>
   </header>
 
   <div class="desk">
-    <form class="sheet" id="form">
+    <form class="sheet" id="form" novalidate>
       <div class="eyebrow">Your draft</div>
       <div class="grid2">
         <div class="field">
           <label for="essayType">Essay type</label>
           <select id="essayType">
-            <option>Personal statement</option>
-            <option>Argumentative</option>
-            <option>Literary analysis</option>
-            <option>Research paper</option>
-            <option>Narrative</option>
+            <option>Personal statement (Common App)</option>
+            <option>Supplemental essay</option>
             <option>Scholarship essay</option>
+            <option>Transfer essay</option>
+            <option>Graduate statement of purpose</option>
             <option>Other</option>
           </select>
         </div>
         <div class="field">
-          <label for="level">Level</label>
-          <select id="level">
-            <option>High school</option>
-            <option selected>Undergraduate</option>
-            <option>Graduate</option>
-            <option>Professional</option>
-          </select>
+          <label for="school">School <span class="opt">(optional)</span></label>
+          <input id="school" type="text" placeholder="e.g. Rice University" autocomplete="off">
         </div>
         <div class="field">
           <label for="limit">Word limit <span class="opt">(optional)</span></label>
@@ -125,19 +152,19 @@
         <div class="field">
           <label for="depth">Review depth</label>
           <select id="depth">
-            <option value="quick">Quick skim</option>
+            <option value="quick">Quick read</option>
             <option value="default" selected>Standard</option>
             <option value="complex">Thorough</option>
           </select>
         </div>
       </div>
       <div class="field">
-        <label for="prompt">Prompt or rubric <span class="opt">(optional)</span></label>
-        <textarea id="prompt" placeholder="Paste the question, rubric or grading criteria"></textarea>
+        <label for="prompt">Essay prompt <span class="opt">(optional)</span></label>
+        <textarea id="prompt" placeholder="Paste the question you are answering"></textarea>
       </div>
       <div class="field">
         <label for="essay">Essay</label>
-        <textarea id="essay" placeholder="Paste your essay here"></textarea>
+        <textarea id="essay" placeholder="Paste your essay here (100 to 1,500 words)"></textarea>
         <div class="meter"><span id="words">0 words</span><span id="paras">0 paragraphs</span></div>
       </div>
       <div class="actions">
@@ -146,6 +173,25 @@
         <button class="ghost" id="clear" type="button">Clear</button>
         <span class="status" id="status" role="status"></span>
       </div>
+      <details class="guide">
+        <summary>How the score works</summary>
+        <p>Each dimension is rated 0 to 5. The overall score out of 100 is Claude's rubric judgement of the whole draft, not a comparison against real admitted essays, so use it to track your own revisions rather than to predict a decision.</p>
+        <dl>
+          <dt>Opening</dt><dd>Do the first two sentences make a reader want the third?</dd>
+          <dt>Through-line</dt><dd>Is there one idea that connects every paragraph?</dd>
+          <dt>Specifics</dt><dd>Concrete scenes, objects and words instead of summary.</dd>
+          <dt>Voice</dt><dd>Could only you have written this?</dd>
+          <dt>Insight</dt><dd>Does the essay show how you think or what changed?</dd>
+          <dt>Craft</dt><dd>Sentence control, pacing and no wasted words.</dd>
+        </dl>
+        <dl>
+          <dt>85–100</dt><dd>Ready to submit</dd>
+          <dt>65–84</dt><dd>Close</dd>
+          <dt>45–64</dt><dd>Workable</dd>
+          <dt>25–44</dt><dd>Needs a rethink</dd>
+          <dt>0–24</dt><dd>Early draft</dd>
+        </dl>
+      </details>
     </form>
 
     <section class="sheet" id="report" aria-live="polite"></section>
@@ -155,6 +201,16 @@
 <script>
 const $ = (id) => document.getElementById(id);
 const DRAFT_KEY = "red-pen-draft";
+const LAST_KEY = "red-pen-last-score";
+const MIN_WORDS = 100, MAX_WORDS = 1500;
+
+const DIMENSIONS = ["Opening", "Through-line", "Specifics", "Voice", "Insight", "Craft"];
+const READERS = [
+  { name: "The Champion", lens: "Looks for a reason to say yes" },
+  { name: "The Hard Marker", lens: "Holds it to the top of the pile" },
+  { name: "The Late-Night Reader", lens: "Essay forty tonight. Does anything stick?" },
+  { name: "The Roommate Test", lens: "Would I want this person on my floor?" },
+];
 
 const EXAMPLE_ESSAY = `Ever since I was young, I have always been passionate about helping people. When I was fifteen my grandmother was diagnosed with diabetes and I spent many afternoons helping her check her blood sugar and cook meals that she could eat.
 
@@ -165,32 +221,41 @@ In high school I joined the Health Occupations club and volunteered at a free cl
 I want to study nursing because I believe that everyone deserves to understand their own care. In conclusion, my grandmother and the clinic showed me that I want to spend my life helping others.`;
 
 const EXAMPLE_REVIEW = {
-  overall: 74,
-  verdict: "A sincere draft with two strong, concrete scenes, held back by a generic opening and an ending that restates instead of reflecting.",
-  categories: [
-    { name: "Thesis & focus", score: 7, note: "The link between translation and patient understanding is the real thesis, but it only appears in the last paragraph." },
-    { name: "Structure & flow", score: 7, note: "Clear chronology; paragraphs connect, though each ends abruptly." },
-    { name: "Evidence & detail", score: 8, note: "The notebook of readings and explaining forms in Spanish are specific and memorable." },
-    { name: "Style & voice", score: 6, note: "Stock phrases (“always been passionate”, “In conclusion”) flatten an otherwise personal voice." },
-    { name: "Grammar & mechanics", score: 8, note: "Clean overall; one spelling error and a run-on in paragraph one." }
+  overall: 58,
+  verdict: "Two real scenes are buried under a stock opening and a summary ending; the Spanish-forms detail is the essay you should be writing.",
+  dimensions: [
+    { name: "Opening", score: 1, note: "“Ever since I was young” is one of the most common first lines readers see." },
+    { name: "Through-line", score: 3, note: "Helping people understand their own care is the real thread, but it only surfaces at the end." },
+    { name: "Specifics", score: 3, note: "The notebook and the clinic forms are good; the rest is summary." },
+    { name: "Voice", score: 2, note: "Phrases like “passionate about helping people” could come from any applicant." },
+    { name: "Insight", score: 3, note: "There is a turn from one patient to many, but it is stated, not shown." },
+    { name: "Craft", score: 3, note: "Clean and clear; one spelling error and a run-on in paragraph one." },
   ],
-  strengths: [
-    "Concrete, sensory details: the blood-sugar notebook and the Saturday check-in desk.",
-    "Shows growth from caring for one person to noticing a pattern across many patients.",
-    "The Spanish-language detail gives the essay a distinctive angle no other applicant will share."
+  strongestLine: { quote: "I started explaining the forms to them in Spanish.", why: "The one moment where you act on what you noticed. It is specific and only yours." },
+  weakestMoment: { quote: "Ever since I was young, I have always been passionate about helping people.", why: "Tells the reader a trait instead of showing a moment, and spends your first impression on it." },
+  readers: [
+    { name: "The Champion", vote: "maybe", argument: "The clinic detail tells me she notices fear and does something about it. That is a nurse. I want more of it." },
+    { name: "The Hard Marker", vote: "no", argument: "Half the essay is summary. In a stack of strong applicants, the opening loses me before the good part arrives." },
+    { name: "The Late-Night Reader", vote: "maybe", argument: "I will remember the Spanish forms. I will not remember anything from the first paragraph." },
+    { name: "The Roommate Test", vote: "yes", argument: "Patient with a stubborn grandmother and quietly helpful with strangers. I would want her around." },
   ],
-  priorities: [
-    { title: "Open on a scene, not a claim", detail: "Start with your grandmother refusing to log a reading, or a nervous patient at the clinic. Cut “Ever since I was young”." },
-    { title: "Move the real thesis forward", detail: "Hint early that understanding one’s own care is what drives you, so the ending pays it off instead of introducing it." },
-    { title: "Replace the summary ending", detail: "Drop “In conclusion”. End on what you will do as a nurse, tied back to a specific moment." },
-    { title: "Show the patience, don’t name it", detail: "Give one line of what you actually said or did when she didn’t want to check her levels." }
+  consensus: "Split panel. Everyone agrees the clinic is the strongest material; rebuild the essay around it and the vote likely moves.",
+  fixPlan: {
+    paragraph: 1,
+    problem: "The opening states a trait and summarizes the grandmother story instead of putting the reader in it.",
+    steps: [
+      "Cut the first sentence entirely.",
+      "Open on one afternoon: her refusing to prick her finger, and what you said.",
+      "End the paragraph on the notebook, so it sets up the clinic forms later.",
+    ],
+  },
+  paragraphNotes: [
+    { n: 1, note: "Generic opener; the diagnosis is summarized rather than shown." },
+    { n: 2, note: "The notebook is a strong image. “Alot” should be “a lot”." },
+    { n: 3, note: "The best paragraph. Give one patient a face and a line of dialogue." },
+    { n: 4, note: "“In conclusion” signals a recap. End on what you will do, tied to the clinic." },
   ],
-  lineNotes: [
-    { quote: "Ever since I was young, I have always been passionate about helping people.", issue: "A very common opener that tells the reader nothing specific about you.", suggestion: "Begin with the moment at your grandmother’s kitchen table." },
-    { quote: "This experience taught me alot about responsibility.", issue: "Spelling: “alot”. Also abstract.", suggestion: "“a lot”, and name the specific responsibility you took on." },
-    { quote: "I mostly checked people in", issue: "Undersells the most original part of the essay.", suggestion: "Describe one patient and what changed once the form made sense to them." }
-  ],
-  promptFit: null
+  promptFit: null,
 };
 
 function counts() {
@@ -200,15 +265,15 @@ function counts() {
   const limit = parseInt($("limit").value, 10);
   const w = $("words");
   w.textContent = limit > 0 ? `${words} / ${limit} words` : `${words} word${words === 1 ? "" : "s"}`;
-  w.className = limit > 0 && words > limit ? "over" : "";
+  w.className = (limit > 0 && words > limit) || words > MAX_WORDS ? "over" : "";
   $("paras").textContent = `${paras} paragraph${paras === 1 ? "" : "s"}`;
-  return words;
+  return { words, paras };
 }
 
 function el(tag, props = {}, ...kids) {
   const n = document.createElement(tag);
   Object.assign(n, props);
-  for (const k of kids) if (k != null) n.append(k);
+  for (const k of kids) if (k != null && k !== false) n.append(k);
   return n;
 }
 
@@ -217,49 +282,98 @@ function clampInt(v, lo, hi) {
   return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : lo;
 }
 
-function renderReport(r, { example = false } = {}) {
+function bandFor(score) {
+  if (score >= 85) return "Ready to submit";
+  if (score >= 65) return "Close";
+  if (score >= 45) return "Workable";
+  if (score >= 25) return "Needs a rethink";
+  return "Early draft";
+}
+
+function normVote(v) {
+  const s = String(v || "").toLowerCase();
+  return s.startsWith("y") ? "yes" : s.startsWith("n") ? "no" : "maybe";
+}
+
+function renderReport(r, { example = false, previous = null } = {}) {
   const box = $("report");
-  box.replaceChildren();
-  box.append(el("div", { className: "eyebrow", textContent: "Review" }));
+  box.replaceChildren(el("div", { className: "eyebrow", textContent: "Review" }));
   if (example) box.append(el("div", { className: "banner", textContent: "Example review of the sample essay. Paste your own draft and press Review essay to get yours." }));
 
   const overall = clampInt(r.overall, 0, 100);
-  const grade = el("div", { className: "grade", ariaLabel: `${overall} out of 100` }, el("div", {}, String(overall), el("small", { textContent: "/ 100" })));
-  box.append(el("div", { className: "score" }, grade, el("p", { className: "verdict", textContent: String(r.verdict || "") })));
+  let delta = null;
+  if (previous != null) {
+    const d = overall - previous;
+    delta = el("span", { className: "delta " + (d > 0 ? "up" : d < 0 ? "down" : ""), textContent: d === 0 ? `Same as your last review (${previous})` : `${d > 0 ? "+" : ""}${d} since your last review (${previous})` });
+  }
+  box.append(el("div", { className: "score" },
+    el("div", { className: "grade", ariaLabel: `${overall} out of 100` }, el("div", {}, String(overall), el("small", { textContent: "/ 100" }))),
+    el("div", { className: "summary" },
+      el("span", { className: "band", textContent: bandFor(overall) }),
+      delta,
+      el("p", { className: "verdict", textContent: String(r.verdict || "") }))));
 
-  if (Array.isArray(r.categories) && r.categories.length) {
-    const cats = el("div", { className: "cats" });
-    for (const c of r.categories) {
-      const s = clampInt(c.score, 0, 10);
-      const bar = el("div", { className: "bar" }, el("i"));
-      bar.firstChild.style.width = `${s * 10}%`;
-      cats.append(el("div", { className: "cat" },
-        el("span", { className: "name", textContent: String(c.name || "") }),
-        bar,
-        el("span", { className: "num", textContent: `${s}/10` }),
-        c.note ? el("span", { className: "why", textContent: String(c.note) }) : null));
+  const dims = Array.isArray(r.dimensions) ? r.dimensions : [];
+  if (dims.length) {
+    const scores = dims.map((d) => clampInt(d.score, 0, 5));
+    const weakest = scores.indexOf(Math.min(...scores));
+    const wrap = el("div", { className: "dims" });
+    dims.forEach((d, i) => {
+      const pips = el("span", { className: "pips", ariaLabel: `${scores[i]} of 5` });
+      for (let p = 0; p < 5; p++) pips.append(el("i", { className: p < scores[i] ? "on" : "" }));
+      wrap.append(el("div", { className: "dim" + (i === weakest ? " weak" : "") },
+        el("span", { className: "name", textContent: String(d.name || DIMENSIONS[i] || "") }),
+        pips,
+        i === weakest ? el("span", { className: "tag", textContent: "Start here" }) : el("span"),
+        d.note ? el("span", { className: "why", textContent: String(d.note) }) : null));
+    });
+    box.append(wrap);
+  }
+
+  if (r.strongestLine || r.weakestMoment) {
+    const card = (cls, label, o) => o && o.quote ? el("div", { className: "line " + cls },
+      el("span", { className: "k", textContent: label }),
+      el("q", { textContent: String(o.quote) }),
+      el("span", { textContent: String(o.why || "") })) : null;
+    box.append(el("div", { className: "lines" },
+      card("best", "Strongest line", r.strongestLine),
+      card("worst", "Weakest moment", r.weakestMoment)));
+  }
+
+  if (Array.isArray(r.readers) && r.readers.length) {
+    box.append(el("h2", { textContent: "Reader panel" }));
+    const votes = { yes: 0, maybe: 0, no: 0 };
+    const panel = el("div", { className: "panel" });
+    for (const rd of r.readers) {
+      const v = normVote(rd.vote); votes[v]++;
+      const meta = READERS.find((x) => x.name === rd.name);
+      panel.append(el("div", { className: "reader" },
+        el("header", {}, el("b", { textContent: String(rd.name || "Reader") }), el("span", { className: "vote " + v, textContent: v })),
+        meta ? el("span", { className: "lens", textContent: meta.lens }) : null,
+        el("p", { textContent: String(rd.argument || "") })));
     }
-    box.append(cats);
+    box.append(panel);
+    box.append(el("span", { className: "tally", textContent: `${votes.yes} yes · ${votes.maybe} maybe · ${votes.no} no` }));
+    if (r.consensus) box.append(el("p", { className: "consensus", textContent: String(r.consensus) }));
   }
 
-  if (Array.isArray(r.priorities) && r.priorities.length) {
-    box.append(el("h2", { className: "fix", textContent: "Fix these first" }));
-    box.append(el("ol", {}, ...r.priorities.map((p) =>
-      el("li", {}, el("strong", { textContent: String(p.title || "") }), String(p.detail || "")))));
+  const plan = r.fixPlan;
+  if (plan && (plan.problem || (Array.isArray(plan.steps) && plan.steps.length))) {
+    box.append(el("h2", { className: "fix", textContent: `Fix plan: paragraph ${clampInt(plan.paragraph, 1, 99)}` }));
+    box.append(el("div", { className: "plan" },
+      el("p", { textContent: String(plan.problem || "") }),
+      Array.isArray(plan.steps) ? el("ol", {}, ...plan.steps.map((s) => el("li", { textContent: String(s) }))) : null));
   }
 
-  if (Array.isArray(r.strengths) && r.strengths.length) {
-    box.append(el("h2", { className: "good", textContent: "What’s working" }));
-    box.append(el("ul", {}, ...r.strengths.map((s) => el("li", { textContent: String(s) }))));
-  }
-
-  if (Array.isArray(r.lineNotes) && r.lineNotes.length) {
-    box.append(el("h2", { className: "fix", textContent: "Line notes" }));
-    box.append(el("div", { className: "notes" }, ...r.lineNotes.map((n) =>
-      el("div", { className: "note" },
-        el("q", { textContent: String(n.quote || "") }),
-        el("span", { className: "issue", textContent: String(n.issue || "") }),
-        n.suggestion ? el("span", { className: "fixit", textContent: "Try: " + String(n.suggestion) }) : null))));
+  if (Array.isArray(r.paragraphNotes) && r.paragraphNotes.length) {
+    const hurt = plan ? clampInt(plan.paragraph, 1, 99) : -1;
+    box.append(el("h2", { textContent: "Paragraph by paragraph" }));
+    box.append(el("div", { className: "paras" }, ...r.paragraphNotes.map((p) => {
+      const n = clampInt(p.n, 1, 99);
+      return el("div", { className: "para" + (n === hurt ? " hurt" : "") },
+        el("span", { className: "n", textContent: `¶${n}` }),
+        el("span", { textContent: String(p.note || "") }));
+    })));
   }
 
   if (r.promptFit) {
@@ -290,36 +404,67 @@ const ERRORS = {
   empty_completion: "The review came back empty. Try again.",
 };
 
+function numberedEssay() {
+  return $("essay").value.trim().split(/\n\s*\n/).filter((p) => p.trim())
+    .map((p, i) => `[¶${i + 1}] ${p.trim()}`).join("\n\n");
+}
+
 function buildPrompt() {
+  const { words } = counts();
   const limit = parseInt($("limit").value, 10);
+  const school = $("school").value.trim();
   const promptText = $("prompt").value.trim();
-  return `You are an experienced writing instructor reviewing a student's essay. Be honest, specific and encouraging. Quote short phrases from the essay exactly as written. Do not rewrite the essay; show the student how to improve it.
+  return `You are reviewing a college application essay. Be candid: an agreeable review that praises a polished but empty draft is useless to the student. Quote the essay exactly when you quote it. Never rewrite the essay for the student; tell them what to change and why.
 
 Essay type: ${$("essayType").value}
-Level: ${$("level").value}
-${limit > 0 ? `Word limit: ${limit} (the essay has ${counts()} words)` : ""}
-${promptText ? `<assignment>\n${promptText}\n</assignment>` : "No assignment prompt was given."}
+${school ? `School: ${school} (consider what you know of its values, but do not invent prompts or facts about it)` : ""}
+Word count: ${words}${limit > 0 ? ` (limit ${limit})` : ""}
+${promptText ? `<prompt>\n${promptText}\n</prompt>` : "No essay prompt was given."}
 
+Paragraphs are numbered [¶n] for reference.
 <essay>
-${$("essay").value.trim()}
+${numberedEssay()}
 </essay>
 
+Rate six dimensions from 0 to 5:
+- Opening: do the first two sentences make a reader want the third?
+- Through-line: is there one idea that connects every paragraph?
+- Specifics: concrete scenes, objects and words instead of summary.
+- Voice: could only this student have written it?
+- Insight: does it show how they think, or what changed in them?
+- Craft: sentence control, pacing, no wasted words.
+
+Then convene four readers with different lenses. Each argues in one or two sentences, aware of the others, then votes yes, maybe or no:
+- The Champion: looks for a reason to say yes.
+- The Hard Marker: holds it to the standard of the very strongest applicants.
+- The Late-Night Reader: tired, reading their fortieth essay tonight; asks what will stick.
+- The Roommate Test: asks whether they would want this person in their community.
+
 Reply with only a JSON object in exactly this shape:
-{"overall": 0-100 integer, "verdict": "one-sentence overall judgement",
- "categories": [{"name": "Thesis & focus"|"Structure & flow"|"Evidence & detail"|"Style & voice"|"Grammar & mechanics", "score": 0-10 integer, "note": "one sentence"}] (all five, in that order),
- "strengths": ["2-4 short bullets"],
- "priorities": [{"title": "short imperative", "detail": "one or two sentences"}] (3-5, most important first),
- "lineNotes": [{"quote": "exact phrase from the essay", "issue": "what's wrong", "suggestion": "how to fix it"}] (3-8),
- "promptFit": "two sentences on how well it answers the assignment, or null if none was given"}`;
+{"overall": integer 0-100 (85+ ready to submit, 65-84 close, 45-64 workable, 25-44 needs a rethink, below 25 early draft),
+ "verdict": "one sentence",
+ "dimensions": [{"name": "Opening", "score": 0-5, "note": "one sentence"}, ...all six in the order above],
+ "strongestLine": {"quote": "exact sentence from the essay", "why": "one sentence"},
+ "weakestMoment": {"quote": "exact sentence or phrase from the essay", "why": "one sentence"},
+ "readers": [{"name": "The Champion", "vote": "yes"|"maybe"|"no", "argument": "1-2 sentences"}, ...all four in the order above],
+ "consensus": "one or two sentences summing up where the panel landed",
+ "fixPlan": {"paragraph": number of the paragraph hurting the essay most, "problem": "one sentence", "steps": ["2-4 concrete steps"]},
+ "paragraphNotes": [{"n": paragraph number, "note": "one sentence"}] (one per paragraph),
+ "promptFit": "two sentences on how well it answers the prompt, or null if no prompt was given"}`;
 }
 
 let ctl = null;
-let samplePromise = window.claude?.use ? window.claude.use("sample") : Promise.resolve(null);
+const samplePromise = window.claude?.use ? window.claude.use("sample") : Promise.resolve(null);
+
+function readLast() {
+  try { const v = parseInt(localStorage.getItem(LAST_KEY), 10); return Number.isFinite(v) ? v : null; } catch { return null; }
+}
 
 $("form").addEventListener("submit", async (e) => {
   e.preventDefault();
-  if (!$("essay").value.trim()) { setStatus("Paste an essay first.", true); return; }
-  if (counts() < 40) { setStatus("Add a bit more text. Reviews work best on 40+ words.", true); return; }
+  const { words } = counts();
+  if (words < MIN_WORDS) { setStatus(`Add more text: reviews need at least ${MIN_WORDS} words (you have ${words}).`, true); return; }
+  if (words > MAX_WORDS) { setStatus(`Trim to ${MAX_WORDS.toLocaleString()} words or fewer (you have ${words.toLocaleString()}).`, true); return; }
 
   const sample = await samplePromise;
   if (!sample) { setStatus("Claude isn’t available in this view. Open the page on claude.ai while signed in.", true); return; }
@@ -328,20 +473,23 @@ $("form").addEventListener("submit", async (e) => {
   $("go").disabled = true;
   $("stop").hidden = false;
   setStatus("");
-  showThinking("Reading your essay");
+  showThinking("The panel is reading your essay");
 
   try {
     const review = await sample.json(buildPrompt(), {
       modelTier: $("depth").value,
       signal: ctl.signal,
-      onText: () => { $("report").querySelector(".placeholder").textContent = "Writing the review"; },
+      onText: () => { const p = $("report").querySelector(".placeholder"); if (p) p.textContent = "Writing up the review"; },
     });
     if (!review || typeof review !== "object") throw { code: "invalid_json" };
-    renderReport(review);
-    setStatus("Review ready.");
+    const previous = readLast();
+    renderReport(review, { previous });
+    try { localStorage.setItem(LAST_KEY, String(clampInt(review.overall, 0, 100))); } catch {}
+    setStatus("Review ready. Revise the dimension marked Start here, then review again.");
   } catch (err) {
-    if (err?.code === "cancelled") { setStatus("Stopped."); renderReport(EXAMPLE_REVIEW, { example: true }); }
-    else { setStatus(ERRORS[err?.code] || "Something went wrong reaching Claude. Try again.", true); renderReport(EXAMPLE_REVIEW, { example: true }); }
+    renderReport(EXAMPLE_REVIEW, { example: true });
+    if (err?.code === "cancelled") setStatus("Stopped.");
+    else setStatus(ERRORS[err?.code] || "Something went wrong reaching Claude. Try again.", true);
   } finally {
     $("go").disabled = false;
     $("stop").hidden = true;
@@ -350,17 +498,26 @@ $("form").addEventListener("submit", async (e) => {
 });
 
 $("stop").addEventListener("click", () => ctl?.abort());
-$("clear").addEventListener("click", () => { $("essay").value = ""; $("prompt").value = ""; counts(); saveDraft(); $("essay").focus(); });
+$("clear").addEventListener("click", () => {
+  for (const id of ["essay", "prompt", "school"]) $(id).value = "";
+  counts(); saveDraft(); $("essay").focus();
+});
 
 function saveDraft() {
-  try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ essay: $("essay").value, prompt: $("prompt").value, limit: $("limit").value })); } catch {}
+  try {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({
+      essay: $("essay").value, prompt: $("prompt").value, limit: $("limit").value,
+      school: $("school").value, type: $("essayType").value,
+    }));
+  } catch {}
 }
-for (const id of ["essay", "prompt", "limit"]) $(id).addEventListener("input", () => { counts(); saveDraft(); });
+for (const id of ["essay", "prompt", "limit", "school", "essayType"]) $(id).addEventListener("input", () => { counts(); saveDraft(); });
 
 let draft = null;
 try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null"); } catch {}
 if (draft && draft.essay) {
   $("essay").value = draft.essay; $("prompt").value = draft.prompt || ""; $("limit").value = draft.limit || "";
+  $("school").value = draft.school || ""; if (draft.type) $("essayType").value = draft.type;
 } else {
   $("essay").value = EXAMPLE_ESSAY; $("limit").value = "650";
 }
